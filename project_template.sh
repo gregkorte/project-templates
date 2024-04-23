@@ -486,6 +486,7 @@ from raterapi.views import (
     register_user,
     login_user,
     get_current_user,
+    )
 
 router = routers.DefaultRouter(trailing_slash=False)
 
