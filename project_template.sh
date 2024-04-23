@@ -478,9 +478,14 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 " > ./${PROJECT_NAME}project/settings.py
 
-echo "from django.contrib import admin
+echo "
+from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
+from raterapi.views import (
+    register_user,
+    login_user,
+    get_current_user,
 
 router = routers.DefaultRouter(trailing_slash=False)
 
@@ -518,9 +523,9 @@ echo '[FORMAT]
 
 pipenv run bash -c "python3 manage.py migrate"
 git init
-git branch -M main
 git add --all
 git commit -m "Initial commit"
+git branch -M main
 git remote add origin ${REPO_NAME}
 git push -u origin main
 
