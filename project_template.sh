@@ -488,7 +488,6 @@ urlpatterns = [
     path('', include(router.urls)),
     path("register", register_user),
     path("login", login_user),
-    path("admin/", admin.site.urls),
     path("current_user", get_current_user),
 ]
 " > ./${PROJECT_NAME}project/urls.py
@@ -519,10 +518,10 @@ echo '[FORMAT]
 
 pipenv run bash -c "python3 manage.py migrate"
 git init
-git remote add origin ${REPO_NAME}
 git branch -M main
 git add --all
 git commit -m "Initial commit"
+git remote add origin ${REPO_NAME}
 git push -u origin main
 
 echo "**********************************"
