@@ -492,9 +492,9 @@ router = routers.DefaultRouter(trailing_slash=False)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path("register", register_user),
-    path("login", login_user),
-    path("current_user", get_current_user),
+    path('register', register_user),
+    path('login', login_user),
+    path('current_user', get_current_user),
 ]
 " > ./${PROJECT_NAME}project/urls.py
 
