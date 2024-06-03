@@ -255,6 +255,21 @@ def register_user(request):
         'email': new_user.email
     }
     return Response(data)
+
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def get_current_user(request):
+    """Handle GET requests for single item
+
+    Returns:
+        Response -- JSON serialized instance
+    """
+
+    try:
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
+    except Exception as ex:
+        return Response({"reason": ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
 EOL
 
 cat <<EOL > ./${PROJECT_NAME}api/views/template.py
