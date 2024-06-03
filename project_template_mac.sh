@@ -358,6 +358,201 @@ class VoidSerializer(serializers.ModelSerializer):
 
 EOL
 
+cat <<EOL > ./${PROJECT_NAME}api/views/__init__.py
+from .auth import login_user, register_user, get_current_user
+
+EOL
+
+cat <<EOL > ./.vscode/launch.json
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Django",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/manage.py",
+            "args": ["runserver"],
+            "django": true,
+            "autoReload":{
+                "enable": true
+            }
+        }
+    ]
+}
+
+EOL
+
+cat <<EOL > ./.vscode/settings.json
+{
+    "pylint.args": [
+        "--disable=W0105,E1101,W0614,C0111,C0301",
+        "--load-plugins=pylint_django",
+        "--django-settings-module=bangazon.settings",
+        "--max-line-length=120"
+    ],
+}
+
+EOL
+
+cat <<EOL > ./${PROJECT_NAME}project/settings.py
+from pathlib import Path
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'django-insecure-x9yg09-pv69(#mz@!n(1&c_rxvks#3*v&#vx!%t39p(n(f0gbb'
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+
+ALLOWED_HOSTS = []
+
+
+# Application definition
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'corsheaders',
+    '${PROJECT_NAME}api',
+]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
+
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+)
+
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+ROOT_URLCONF = '${PROJECT_NAME}project.urls'
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+WSGI_APPLICATION = '${PROJECT_NAME}project.wsgi.application'
+
+
+# Database
+# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+
+# Password validation
+# https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
+
+
+# Internationalization
+# https://docs.djangoproject.com/en/4.0/topics/i18n/
+
+LANGUAGE_CODE = 'en-us'
+
+TIME_ZONE = 'UTC'
+
+USE_I18N = True
+
+USE_TZ = True
+
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/4.0/howto/static-files/
+
+STATIC_URL = 'static/'
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EOL
+
+cat <<EOL > ./${PROJECT_NAME}project/urls.py
+from django.contrib import admin
+from django.urls import include, path
+from rest_framework import routers
+from ${PROJECT_NAME}api.views import (
+    register_user,
+    login_user,
+    get_current_user,
+    )
+
+router = routers.DefaultRouter(trailing_slash=False)
+
+urlpatterns = [
+    path('', include(router.urls)),
+    path('register', register_user),
+    path('login', login_user),
+    path('current_user', get_current_user),
+]
+
+EOL
+
 cat <<EOL > ./seed_database.sh
 #!/bin/bash
 
@@ -369,6 +564,20 @@ python3 manage.py migrate ${PROJECT_NAME}api
 python3 manage.py loaddata user
 python3 manage.py loaddata token
 
+EOL
+
+chmod +x ./seed_database.sh
+
+cat <<EOL > ./.pylintrc
+[FORMAT]
+  good-names=i,j,ex,pk
+
+[MESSAGES CONTROL]
+  disable=broad-except,imported-auth-user,missing-class-docstring,no-self-use,abstract-method
+
+[MASTER]
+  disable=C0114,
+  
 EOL
 
 pipenv run python3 manage.py makemigrations
