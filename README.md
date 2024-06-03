@@ -4,6 +4,12 @@ Create a repo at Github name the same as your project. If your repo is named `cu
 
 Run this command from your terminal to create a Django RF project.
 
+For Windows:
 ```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/gregkorte/django-template/main/project_template.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/gregkorte/django-template/main/project_template_win.sh)"
+```
+
+For Mac:
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/gregkorte/django-template/main/project_template_mac.sh)"
 ```
