@@ -378,6 +378,7 @@ pipenv run python3 manage.py loaddata ${PROJECT_NAME}api/fixtures/tokens.json
 
 git init
 git remote add origin ${REPO_NAME}
+git branch -m master main
 git add .
 git commit -m 'Initial commit'
-git push -u origin master
+git push -u origin main
