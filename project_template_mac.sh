@@ -11,6 +11,7 @@ read -p "> " REPO_NAME
 curl -L -s 'https://raw.githubusercontent.com/github/gitignore/master/Python.gitignore' > .gitignore
 echo 'db.sqlite3' >> .gitignore
 pipenv install django autopep8 pylint djangorestframework django-cors-headers pylint-django
+pipenv shell
 django-admin startproject ${PROJECT_NAME}project .
 python3 manage.py startapp ${PROJECT_NAME}api
 touch ./db.sqlite3
