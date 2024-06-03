@@ -576,8 +576,8 @@ rm -rf ./${PROJECT_NAME}api/migrations
 python3 manage.py migrate
 python3 manage.py makemigrations ${PROJECT_NAME}api
 python3 manage.py migrate ${PROJECT_NAME}api
-python3 manage.py loaddata user
-python3 manage.py loaddata token
+python3 manage.py loaddata users
+python3 manage.py loaddata tokens
 
 EOL
 
