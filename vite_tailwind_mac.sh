@@ -25,7 +25,7 @@ touch ./src/views/ApplicationViews.jsx
 touch ./src/views/Authorized.jsx
 
 cat <<EOL > ./tailwind.config.js
-/** @type {import('tailwindcss').Config} */
+/** @type {import("tailwindcss").Config} */
 export default {
   content: [
     "./index.html",
@@ -236,7 +236,7 @@ export const ApplicationViews = () => {
     const [currentUser, setCurrentUser] = useState({})
 
     useEffect(() => {
-        const localUser = localStorage.getItem('${PROJECT_NAME}_user')
+        const localUser = localStorage.getItem("${PROJECT_NAME}_user")
         const userObject = JSON.parse(localUser)
 
         setCurrentUser(userObject)
