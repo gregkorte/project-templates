@@ -3,6 +3,8 @@
 echo "Enter a single word to prefix your project name and API app name:"
 read -p "> " PROJECT_NAME
 
+mkdir ${PROJECT_NAME} && cd $_
+
 echo "Enter the SSH address for your Github repository:"
 read -p "> " REPO_NAME
 
@@ -11,6 +13,8 @@ echo 'db.sqlite3' >> .gitignore
 pipenv install django autopep8 pylint djangorestframework django-cors-headers pylint-django
 django-admin startproject ${PROJECT_NAME}project .
 python3 manage.py startapp ${PROJECT_NAME}api
+touch ./db.sqlite3
+touch ./seed_database.sh
 mkdir ./.vscode
 mkdir ./${PROJECT_NAME}api/fixtures
 touch ./${PROJECT_NAME}api/fixtures/users.json
@@ -310,6 +314,106 @@ class UserSerializer(serializers.ModelSerializer):
 ' > ./${PROJECT_NAME}api/views/auth.py
 
 echo '
+from django.http import HttpResponseServerError
+from rest_framework import serializers, status
+from rest_framework.response import Response
+from rest_framework.viewsets import ViewSet
+from rockapi.models import Void
+
+
+class TemplateView(ViewSet):
+    """Void view set"""
+
+
+    def create(self, request):
+        """Handle POST operations
+
+        Returns:
+            Response -- JSON serialized instance
+        """
+        void = Void()
+        void.sample_name = request.data["name"]
+        void.sample_description = request.data["description"]
+
+        try:
+            void.save()
+            serializer = VoidSerializer(void)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except Exception as ex:
+            return Response({"reason": ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
+
+    def retrieve(self, request, pk=None):
+        """Handle GET requests for single item
+
+        Returns:
+            Response -- JSON serialized instance
+        """
+        try:
+            void = Void.objects.get(pk=pk)
+            serializer = VoidSerializer(void)
+            return Response(serializer.data)
+        except Exception as ex:
+            return Response({"reason": ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, pk=None):
+        """Handle PUT requests
+
+        Returns:
+            Response -- Empty body with 204 status code
+        """
+        try:
+            void = Void.objects.get(pk=pk)
+            void.sample_name = request.data["name"]
+            void.sample_description = request.data["description"]
+            void.save()
+        except Void.DoesNotExist:
+            return Response(None, status=status.HTTP_404_NOT_FOUND)
+
+        except Exception as ex:
+            return HttpResponseServerError(ex)
+
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
+
+    def destroy(self, request, pk=None):
+        """Handle DELETE requests for a single item
+
+        Returns:
+            Response -- 200, 404, or 500 status code
+        """
+        try:
+            void = Void.objects.get(pk=pk)
+            void.delete()
+            return Response(None, status=status.HTTP_204_NO_CONTENT)
+
+        except Void.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
+        except Exception as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def list(self, request):
+        """Handle GET requests for all items
+
+        Returns:
+            Response -- JSON serialized array
+        """
+        try:
+            voids = Void.objects.all()
+            serializer = VoidSerializer(voids, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as ex:
+            return HttpResponseServerError(ex)
+
+
+class VoidSerializer(serializers.ModelSerializer):
+    """JSON serializer"""
+
+    class Meta:
+        model = Void
+        fields = ( 'id', 'sample_name', 'sample_description', )
+' > ./${PROJECT_NAME}api/views/template.py
+
+echo '
 from .auth import login_user, register_user, get_current_user
 
 ' > ./${PROJECT_NAME}api/views/__init__.py
@@ -522,12 +626,16 @@ echo '[FORMAT]
   disable=C0114,
 ' > .pylintrc
 
-pipenv run bash -c "python3 manage.py migrate"
+pipenv run python3 manage.py makemigrations
+pipenv run python3 manage.py migrate
+pipenv run python3 manage.py loaddata ${PROJECT_NAME}api/fixtures/users.json
+pipenv run python3 manage.py loaddata ${PROJECT_NAME}api/fixtures/tokens.json
+
 git init
-git add --all
-git commit -m "Initial commit"
-git branch -M main
 git remote add origin ${REPO_NAME}
+git branch -M main
+git add .
+git commit -m "Initial commit"
 git push -u origin main
 
 echo "**********************************"
