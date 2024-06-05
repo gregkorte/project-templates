@@ -8,10 +8,10 @@ mkdir ${PROJECT_NAME} && cd $_
 echo "Enter the SSH address for your Github repository:"
 read -p "> " REPO_NAME
 
-curl -L -s 'https://raw.githubusercontent.com/vitejs/vite/main/.gitignore' > .gitignore
 npm create vite@latest . -- --template react
 npm install -D tailwindcss postcss autoprefixer react-router-dom
 npx tailwindcss init -p
+curl -L -s 'https://raw.githubusercontent.com/vitejs/vite/main/.gitignore' > .gitignore
 
 mkdir ./src/components
 mkdir ./src/components/auth
