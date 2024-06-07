@@ -18,11 +18,11 @@ mkdir ./src/components/auth
 touch ./src/components/auth/Register.jsx
 touch ./src/components/auth/Login.jsx
 touch ./src/components/auth/Login.css
-mkdir ./src/services
+mkdir ./src/components/services
 touch ./src/components/services/userServices.jsx
-mkdir ./src/views
-touch ./src/views/ApplicationViews.jsx
-touch ./src/views/Authorized.jsx
+mkdir ./src/components/views
+touch ./src/components/views/ApplicationViews.jsx
+touch ./src/components/views/Authorized.jsx
 
 echo '
 /** @type {import("tailwindcss").Config} */
@@ -278,7 +278,8 @@ export const App = () => {
 }
 ' > ./src/App.jsx
 
-git init --initial-branch=main
+git init
+git checkout -b main
 git remote add origin ${REPO_NAME}
 git add .
 git commit -m "Initial commit"
