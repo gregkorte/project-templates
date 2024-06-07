@@ -259,7 +259,7 @@ import { Register } from "./components/auth/Register.jsx"
 import { ApplicationViews } from "./views/ApplicationViews.jsx"
 import { Authorized } from "./views/Authorized.jsx"
 
-export const App = () => {
+function App() {
 
 
     return (
@@ -276,6 +276,8 @@ export const App = () => {
         </Routes>
       )
 }
+
+export default App
 ' > ./src/App.jsx
 
 git init
@@ -283,7 +285,7 @@ git checkout -b main
 git remote add origin ${REPO_NAME}
 git add .
 git commit -m "Initial commit"
-git push -u origin main
+# git push -u origin main
 
 echo "**********************************"
 echo ""
