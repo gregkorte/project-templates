@@ -278,9 +278,8 @@ export const App = () => {
 }
 ' > ./src/App.jsx
 
-git init
+git init --initial-branch=main
 git remote add origin ${REPO_NAME}
-git branch -m master main
 git add .
 git commit -m "Initial commit"
 git push -u origin main
