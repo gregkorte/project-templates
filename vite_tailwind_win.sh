@@ -66,7 +66,7 @@ echo '
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import "./Login.css"
-import { createUser, getUserByEmail } from "../../services/userServices"
+import { createUser, getUserByEmail } from "../services/userServices"
 
 export const Register = (props) => {
   let navigate = useNavigate()
@@ -148,7 +148,7 @@ import { useState } from "react"
 import { Link } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
 import "./Login.css"
-import { getUserByEmail } from "../../services/userService"
+import { getUserByEmail } from "../services/userService"
 
 export const Login = () => {
   const [email, set] = useState("ryan@ryantanay.com")
@@ -256,8 +256,8 @@ import { Route, Routes } from "react-router-dom"
 import "./App.css"
 import { Login } from "./components/auth/Login.jsx"
 import { Register } from "./components/auth/Register.jsx"
-import { ApplicationViews } from "./views/ApplicationViews.jsx"
-import { Authorized } from "./views/Authorized.jsx"
+import { ApplicationViews } from "./components/views/ApplicationViews.jsx"
+import { Authorized } from "./components/views/Authorized.jsx"
 
 function App() {
 
