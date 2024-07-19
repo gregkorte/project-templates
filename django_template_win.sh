@@ -3,7 +3,7 @@
 echo "Enter a single word to prefix your project name and API app name:"
 read -p "> " PROJECT_NAME
 
-mkdir ${PROJECT_NAME} && cd $_
+mkdir ${PROJECT_NAME}api && cd $_
 
 echo "Enter the SSH address for your Github repository:"
 read -p "> " REPO_NAME
