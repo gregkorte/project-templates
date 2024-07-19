@@ -3,7 +3,7 @@
 echo "Enter your project name (no spaces):"
 read -p "> " PROJECT_NAME
 
-mkdir ${PROJECT_NAME} && cd $_
+mkdir ${PROJECT_NAME}client && cd $_
 
 echo "Enter the SSH address for your Github repository:"
 read -p "> " REPO_NAME
@@ -285,7 +285,7 @@ git checkout -b main
 git remote add origin ${REPO_NAME}
 git add .
 git commit -m "Initial commit"
-# git push -u origin main
+git push -u origin main
 
 echo "**********************************"
 echo ""
