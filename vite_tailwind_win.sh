@@ -114,6 +114,73 @@ button:focus-visible {
 } 
 EOL
 
+cat <<EOL > ./src/components/nav/Navbar.css
+.navbar {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #000;
+    padding: 1rem;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar__item {
+    list-style: none;
+    margin: 0 1rem;
+}
+
+.navbar__item a,
+.navbar__item button {
+    text-decoration: none;
+    color: #007bff;
+    padding: 0.5rem 1rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: color 0.3s;
+}
+
+.navbar__item a:hover,
+.navbar__item button:hover {
+    color: #0056b3;
+}
+
+.navbar__item button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.navbar__item a.underline {
+    text-decoration: underline;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+.text-blue-600 {
+    color: #007bff;
+}
+
+.hover\:text-purple-700:hover {
+    color: #6f42c1;
+}
+
+.pb-10 {
+    padding-bottom: 2.5rem;
+}
+EOL
+
 cat <<EOL > ./src/components/services/userServices.jsx
 export const getCurrentUser = () => {
     return fetch("http://localhost:8000/current_user", {
