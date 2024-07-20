@@ -15,9 +15,9 @@ curl -L -s 'https://raw.githubusercontent.com/vitejs/vite/main/.gitignore' > .gi
 
 mkdir ./src/components
 mkdir ./src/components/auth
+touch ./src/components/auth/Login.css
 touch ./src/components/auth/Register.jsx
 touch ./src/components/auth/Login.jsx
-touch ./src/components/auth/Login.css
 mkdir ./src/components/services
 touch ./src/components/services/userServices.jsx
 mkdir ./src/components/views
@@ -75,7 +75,7 @@ export const Register = (props) => {
     createUser(customer).then((createdUser) => {
       if (createdUser.hasOwnProperty("id")) {
         localStorage.setItem(
-          "$PROJECT_NAME_user",
+          "${PROJECT_NAME}_user",
           JSON.stringify({
             id: createdUser.id,
           })
@@ -102,7 +102,7 @@ export const Register = (props) => {
   return (
     <main style={{ textAlign: "center" }}>
       <form className="form-login" onSubmit={handleRegister}>
-        <h1>$PROJECT_NAME</h1>
+        <h1>${PROJECT_NAME}</h1>
         <h2>Please Register</h2>
         <fieldset>
           <div className="form-group">
@@ -161,7 +161,7 @@ export const Login = () => {
       if (foundUsers.length === 1) {
         const user = foundUsers[0]
         localStorage.setItem(
-          "$PROJECT_NAME_user",
+          "${PROJECT_NAME}_user",
           JSON.stringify({
             id: user.id,
           })
@@ -178,7 +178,7 @@ export const Login = () => {
     <main className="container-login">
       <section>
         <form className="form-login" onSubmit={handleLogin}>
-          <h1>Honey Rae Repairs</h1>
+          <h1>${PROJECT_NAME}</h1>
           <h2>Please sign in</h2>
           <fieldset>
             <div className="form-group">
@@ -221,7 +221,7 @@ export const Authorized = ({ children }) => {
   let location = useLocation()
 
   // Check if user is logged in. If they are, render the CHILD components (in this case, the ApplicationViews component)
-  if (localStorage.getItem("$PROJECT_NAME_user")) {
+  if (localStorage.getItem("${PROJECT_NAME}_user")) {
     return children
   }
   // If the user is NOT logged in, redirect them to the login page using the Navigate component from react-router-dom
@@ -239,7 +239,7 @@ export const ApplicationViews = () => {
     const [currentUser, setCurrentUser] = useState({})
 
     useEffect(() => {
-        const localUser = localStorage.getItem("$PROJECT_NAME_user")
+        const localUser = localStorage.getItem("${PROJECT_NAME}_user")
         const userObject = JSON.parse(localUser)
 
         setCurrentUser(userObject)
@@ -290,6 +290,6 @@ git push -u origin main
 echo "**********************************"
 echo ""
 echo "Double check your files and Github repository to make sure everything installed correctly."
-echo "Run _npm run dev_ in your project root (${PROJECT_NAME}) to run your project."
+echo "Run _npm run dev_ in your project root (${PROJECT_NAME}client) to run your project."
 echo ""
 echo "**********************************"
