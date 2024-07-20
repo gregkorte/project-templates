@@ -112,7 +112,7 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 } */
-# EOL
+EOL
 
 cat <<EOL > ./src/components/services/userServices.jsx
 export const getCurrentUser = () => {
@@ -424,7 +424,7 @@ EOL
 cat <<EOL > ./src/main.jsx
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import ApplicationViews from './components/App.jsx'
+import ApplicationViews from './components/ApplicationViews.jsx'
 import '.index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
