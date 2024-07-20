@@ -241,7 +241,7 @@ import { Navigate, Outlet } from "react-router-dom"
 import { NavBar } from "./nav/Navbar.jsx"
 
 export const Authorized = () => {
-  if (localStorage.getItem("${PROJECT_NAME_token")) {
+  if (localStorage.getItem("${PROJECT_NAME}_token")) {
     return <>
       <NavBar />
       <main className="p-4">
