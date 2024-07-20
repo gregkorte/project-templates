@@ -44,7 +44,7 @@ cat <<EOL > ./src/index.css
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-/* :root {
+:root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -111,7 +111,7 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-} */
+} 
 EOL
 
 cat <<EOL > ./src/components/services/userServices.jsx
@@ -329,7 +329,7 @@ import { Register } from './auth/Register.jsx'
 import App from "../App.jsx"
 
 
-export const ApplicationViews = () => {
+const ApplicationViews = () => {
 
     return <BrowserRouter>
         <Routes>
@@ -341,6 +341,8 @@ export const ApplicationViews = () => {
         </Routes>
     </BrowserRouter>
 }
+
+export default ApplicationViews
 EOL
 
 cat <<EOL > ./src/App.jsx
