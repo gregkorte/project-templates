@@ -15,12 +15,12 @@ curl -L -s 'https://raw.githubusercontent.com/vitejs/vite/main/.gitignore' > .gi
 
 mkdir ./src/components
 mkdir ./src/components/auth
+mkdir ./src/components/services
+mkdir ./src/components/views
 touch ./src/components/auth/Login.css
 touch ./src/components/auth/Register.jsx
 touch ./src/components/auth/Login.jsx
-mkdir ./src/components/services
 touch ./src/components/services/userServices.jsx
-mkdir ./src/components/views
 touch ./src/components/views/ApplicationViews.jsx
 touch ./src/components/views/Authorized.jsx
 
@@ -45,20 +45,13 @@ cat <<EOL > ./src/index.css
 EOL
 
 cat <<EOL > ./src/components/services/userServices.jsx
-export const getUserByEmail = (email) => {
-  return fetch(`http://localhost:8088/users?email=${email}`).then((res) =>
-    res.json()
-  )
-}
-
-export const createUser = (customer) => {
-  return fetch("http://localhost:8088/users", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(customer),
-  }).then((res) => res.json())
+export const getCurrentUser = () => {
+    return fetch('http://localhost:8000/current_user', {
+        headers: {
+            Authorization: `Token ${JSON.parse(localStorage.getItem("${PROJECT_NAME}_token")).token}`,
+            "Content-Type": "application/json"
+        }
+    }).then(res => res.json())
 }
 EOL
 
@@ -77,7 +70,7 @@ export const Register = () => {
 
     const handleRegister = (e) => {
         e.preventDefault()
-        fetch(`http://localhost:8000/register`, {
+        fetch("http://localhost:8000/register", {
             method: "POST",
             body: JSON.stringify({
                 email,
@@ -165,7 +158,7 @@ export const Register = () => {
 EOL
 
 cat <<EOL > .src/components/auth/Login.jsx
-import React, { useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { Link, useNavigate } from "react-router-dom";
 import "./Login.css"
 
@@ -177,7 +170,7 @@ export const Login = () => {
 
     const handleLogin = (e) => {
         e.preventDefault()
-        fetch(`http://localhost:8000/login`, {
+        fetch("http://localhost:8000/login", {
             method: "POST",
             body: JSON.stringify({ email, password }),
             headers: {
@@ -225,7 +218,7 @@ export const Login = () => {
                         />
                     </fieldset>
                     <fieldset>
-                        <button type="submit" className="button p-3 rounded-md bg-blue-800 text-blue-100">
+                        <button type="submit" className="button">
                             Sign in
                         </button>
                     </fieldset>
@@ -233,13 +226,12 @@ export const Login = () => {
             </section>
             <div className="loginLinks">
                 <section className="link--register">
-                    <Link className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600" to="/register">Not a member yet?</Link>
+                    <Link to="/register">Not a member yet?</Link>
                 </section>
             </div>
         </main>
     )
 }
-
 EOL
 
 cat <<EOL > ./src/components/views/Authorized.jsx
@@ -255,26 +247,29 @@ export const Authorized = () => {
       </main>
     </>
   }
-  return <Navigate to='/login' replace />
+  return <Navigate to="/login" replace />
 }
 EOL
 
 cat <<EOL > ./src/components/views/ApplicationViews.jsx
-import { useEffect, useState } from "react"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { Authorized } from "./Authorized"
+import { Login } from "./auth/Login.jsx"
+import { Register } from './auth/Register.jsx'
+import App from "../App.jsx"
+
 
 export const ApplicationViews = () => {
-    const [currentUser, setCurrentUser] = useState({})
 
-    useEffect(() => {
-        const localUser = localStorage.getItem("${PROJECT_NAME}_user")
-        const userObject = JSON.parse(localUser)
-
-        setCurrentUser(userObject)
-    }, [])
-
-  return (
-    <div>And yet another React App...</div>
-  )
+    return <BrowserRouter>
+        <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route element={<Authorized />}>
+                <Route path="/" element={<App />} />
+            </Route>
+        </Routes>
+    </BrowserRouter>
 }
 EOL
 
@@ -287,7 +282,6 @@ import { ApplicationViews } from "./components/views/ApplicationViews.jsx"
 import { Authorized } from "./components/views/Authorized.jsx"
 
 function App() {
-
 
     return (
         <Routes>
