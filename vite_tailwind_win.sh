@@ -38,13 +38,13 @@ export default {
 }
 EOL
 
-echo '
+cat <<EOL > ./src/index.css
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-' > ./src/index.css
+EOL
 
-echo '
+cat <<EOL > ./src/components/services/userServices.jsx
 export const getUserByEmail = (email) => {
   return fetch(`http://localhost:8088/users?email=${email}`).then((res) =>
     res.json()
@@ -60,9 +60,9 @@ export const createUser = (customer) => {
     body: JSON.stringify(customer),
   }).then((res) => res.json())
 }
-' > ./src/components/services/userServices.jsx
+EOL
 
-echo '
+cat <<EOL > ./src/components/auth/Register.jsx
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import "./Login.css"
@@ -140,10 +140,9 @@ export const Register = (props) => {
     </main>
   )
 }
+EOL
 
-' > ./src/components/auth/Register.jsx
-
-echo '
+cat <<EOL > .src/components/auth/Login.jsx
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
@@ -208,10 +207,9 @@ export const Login = () => {
     </main>
   )
 }
+EOL
 
-' > .src/components/auth/Login.jsx
-
-echo '
+cat <<EOL > ./src/components/views/Authorized.jsx
 import { Navigate, useLocation } from "react-router-dom"
 
 // We can access child components the same way we access props. Child components are passed to our props as a key/value pair where
@@ -229,10 +227,9 @@ export const Authorized = ({ children }) => {
     return <Navigate to={`/login`} state={{ from: location }} replace />
   }
 }
+EOL
 
-' > ./src/components/views/Authorized.jsx
-
-echo '
+cat <<EOL > ./src/components/views/ApplicationViews.jsx
 import { useEffect, useState } from "react"
 
 export const ApplicationViews = () => {
@@ -249,9 +246,9 @@ export const ApplicationViews = () => {
     <div>And yet another React App...</div>
   )
 }
-' > ./src/components/views/ApplicationViews.jsx
+EOL
 
-echo '
+cat <<EOL > ./src/App.jsx
 import { Route, Routes } from "react-router-dom"
 import "./App.css"
 import { Login } from "./components/auth/Login.jsx"
@@ -278,7 +275,7 @@ function App() {
 }
 
 export default App
-' > ./src/App.jsx
+EOL
 
 git init
 git checkout -b main
