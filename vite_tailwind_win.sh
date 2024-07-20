@@ -48,9 +48,9 @@ EOL
 
 cat <<EOL > ./src/components/services/userServices.jsx
 export const getCurrentUser = () => {
-    return fetch('http://localhost:8000/current_user', {
+    return fetch("http://localhost:8000/current_user", {
         headers: {
-            Authorization: "Token ${JSON.parse(localStorage.getItem('${PROJECT_NAME}_token')).token}",
+            Authorization: "Token + " " + JSON.parse(localStorage.getItem('${PROJECT_NAME}_token')).token",
             "Content-Type": "application/json"
         }
     }).then(res => res.json())
@@ -315,7 +315,7 @@ export const NavBar = () => {
                 (localStorage.getItem("${PROJECT_NAME}_token") !== null) ?
                 <>
                     <li className="navbar__item">
-                        <NavLinkclassName="text-left underline text-blue-600 hover:text-purple-700" to={"/"}>Link1</NavLink>
+                        <NavLink className="text-left underline text-blue-600 hover:text-purple-700" to={"/"}>Link1</NavLink>
                     </li>
                     <li className="navbar__item">
                         <NavLink to={"/"}>Link2</NavLink>
