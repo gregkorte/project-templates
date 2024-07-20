@@ -462,13 +462,7 @@ export const NavBar = () => {
                 (localStorage.getItem("${PROJECT_NAME}_token") !== null) ?
                 <>
                     <li className="navbar__item">
-                        <NavLink className="text-left underline text-blue-600 hover:text-purple-700" to={"/"}>Link1</NavLink>
-                    </li>
-                    <li className="navbar__item">
-                        <NavLink to={"/"}>Link2</NavLink>
-                    </li>
-                    <li className="navbar__item">
-                        <button 
+                        <button
                             onClick={() => {
                                 localStorage.removeItem("${PROJECT_NAME}_token")
                                 navigate('/login')
