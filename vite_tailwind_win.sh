@@ -75,7 +75,7 @@ export const Register = (props) => {
     createUser(customer).then((createdUser) => {
       if (createdUser.hasOwnProperty("id")) {
         localStorage.setItem(
-          "${PROJECT_NAME}_user",
+          "$PROJECT_NAME_user",
           JSON.stringify({
             id: createdUser.id,
           })
@@ -102,7 +102,7 @@ export const Register = (props) => {
   return (
     <main style={{ textAlign: "center" }}>
       <form className="form-login" onSubmit={handleRegister}>
-        <h1>${PROJECT_NAME}</h1>
+        <h1>$PROJECT_NAME</h1>
         <h2>Please Register</h2>
         <fieldset>
           <div className="form-group">
@@ -161,7 +161,7 @@ export const Login = () => {
       if (foundUsers.length === 1) {
         const user = foundUsers[0]
         localStorage.setItem(
-          "${PROJECT_NAME}_user",
+          "$PROJECT_NAME_user",
           JSON.stringify({
             id: user.id,
           })
@@ -221,7 +221,7 @@ export const Authorized = ({ children }) => {
   let location = useLocation()
 
   // Check if user is logged in. If they are, render the CHILD components (in this case, the ApplicationViews component)
-  if (localStorage.getItem("${PROJECT_NAME}_user")) {
+  if (localStorage.getItem("$PROJECT_NAME_user")) {
     return children
   }
   // If the user is NOT logged in, redirect them to the login page using the Navigate component from react-router-dom
@@ -239,7 +239,7 @@ export const ApplicationViews = () => {
     const [currentUser, setCurrentUser] = useState({})
 
     useEffect(() => {
-        const localUser = localStorage.getItem("${PROJECT_NAME}_user")
+        const localUser = localStorage.getItem("$PROJECT_NAME_user")
         const userObject = JSON.parse(localUser)
 
         setCurrentUser(userObject)
