@@ -63,169 +63,199 @@ export const createUser = (customer) => {
 EOL
 
 cat <<EOL > ./src/components/auth/Register.jsx
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import React, { useRef, useState } from "react"
+import { Link, useNavigate } from "react-router-dom";
 import "./Login.css"
-import { createUser, getUserByEmail } from "../services/userServices"
 
-export const Register = (props) => {
-  let navigate = useNavigate()
+export const Register = () => {
+    const [email, setEmail] = useState("admina@straytor.com")
+    const [password, setPassword] = useState("straytor")
+    const [firstName, setFirstName] = useState("Admina")
+    const [lastName, setLastName] = useState("Straytor")
+    const existDialog = useRef()
+    const navigate = useNavigate()
 
-  const registerNewUser = () => {
-    createUser(customer).then((createdUser) => {
-      if (createdUser.hasOwnProperty("id")) {
-        localStorage.setItem(
-          "${PROJECT_NAME}_user",
-          JSON.stringify({
-            id: createdUser.id,
-          })
-        )
+    const handleRegister = (e) => {
+        e.preventDefault()
+        fetch(`http://localhost:8000/register`, {
+            method: "POST",
+            body: JSON.stringify({
+                email,
+                password,
+                first_name: firstName,
+                last_name: lastName
+            }),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(res => res.json())
+            .then(authInfo => {
+                if (authInfo && authInfo.token) {
+                    localStorage.setItem("${PROJECT_NAME}_token", JSON.stringify(authInfo))
+                    navigate("/")
+                } else {
+                    existDialog.current.showModal()
+                }
+            })
+    }
 
-        navigate("/")
-      }
-    })
-  }
+    return (
+        <main className="container--login">
+            <dialog className="dialog dialog--auth" ref={existDialog}>
+                <div>User does not exist</div>
+                <button className="button--close" onClick={e => existDialog.current.close()}>Close</button>
+            </dialog>
 
-  const handleRegister = (e) => {
-    e.preventDefault()
-    getUserByEmail(customer.email).then((response) => {
-      if (response.length > 0) {
-        // Duplicate email. No good.
-        window.alert("Account with that email address already exists")
-      } else {
-        // Good email, create user.
-        registerNewUser()
-      }
-    })
-  }
-
-  return (
-    <main style={{ textAlign: "center" }}>
-      <form className="form-login" onSubmit={handleRegister}>
-        <h1>${PROJECT_NAME}</h1>
-        <h2>Please Register</h2>
-        <fieldset>
-          <div className="form-group">
-            <input
-              onChange={updateCustomer}
-              type="text"
-              id="fullName"
-              className="form-control"
-              placeholder="Enter your name"
-              required
-              autoFocus
-            />
-          </div>
-        </fieldset>
-        <fieldset>
-          <div className="form-group">
-            <input
-              onChange={updateCustomer}
-              type="email"
-              id="email"
-              className="form-control"
-              placeholder="Email address"
-              required
-            />
-          </div>
-        </fieldset>
-        <fieldset>
-          <div className="form-group">
-            <button className="login-btn btn-info" type="submit">
-              Register
-            </button>
-          </div>
-        </fieldset>
-      </form>
-    </main>
-  )
+            <section>
+                <form className="form--login" onSubmit={handleRegister}>
+                    <h1 className="text-4xl mt-7 mb-3">${PROJECT_NAME}</h1>
+                    <h2 className="text-xl mb-10">Register new account</h2>
+                    <fieldset className="mb-4">
+                        <label htmlFor="firstName"> First name </label>
+                        <input type="text" id="firstName"
+                            value={firstName}
+                            onChange={evt => setFirstName(evt.target.value)}
+                            className="form-control"
+                            placeholder=""
+                            required autoFocus />
+                    </fieldset>
+                    <fieldset className="mb-4">
+                        <label htmlFor="lastName"> Last name </label>
+                        <input type="text" id="lastName"
+                            value={lastName}
+                            onChange={evt => setLastName(evt.target.value)}
+                            className="form-control"
+                            placeholder=""
+                            required autoFocus />
+                    </fieldset>
+                    <fieldset className="mb-4">
+                        <label htmlFor="inputEmail"> Email address </label>
+                        <input type="email" id="inputEmail"
+                            value={email}
+                            onChange={evt => setEmail(evt.target.value)}
+                            className="form-control"
+                            placeholder="Email address"
+                            required autoFocus />
+                    </fieldset>
+                    <fieldset className="mb-4">
+                        <label htmlFor="inputPassword"> Password </label>
+                        <input type="password" id="inputPassword"
+                            value={password}
+                            onChange={evt => setPassword(evt.target.value)}
+                            className="form-control"
+                            placeholder="Password"
+                        />
+                    </fieldset>
+                    <fieldset>
+                        <button type="submit" className="button p-3 rounded-md bg-blue-800 text-blue-100">
+                            Register
+                        </button>
+                    </fieldset>
+                </form>
+            </section>
+            <div className="loginLinks">
+                <section className="link--register">
+                    <Link className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600" to="/login">Already have an account?</Link>
+                </section>
+            </div>
+        </main>
+    )
 }
 EOL
 
 cat <<EOL > .src/components/auth/Login.jsx
-import { useState } from "react"
-import { Link } from "react-router-dom"
-import { useNavigate } from "react-router-dom"
+import React, { useRef, useState } from "react"
+import { Link, useNavigate } from "react-router-dom";
 import "./Login.css"
-import { getUserByEmail } from "../services/userService"
 
 export const Login = () => {
-  const [email, set] = useState("ryan@ryantanay.com")
-  const navigate = useNavigate()
+    const [email, setEmail] = useState("steve@brownlee.com")
+    const [password, setPassword] = useState("brownlee")
+    const existDialog = useRef()
+    const navigate = useNavigate()
 
-  const handleLogin = (e) => {
-    e.preventDefault()
+    const handleLogin = (e) => {
+        e.preventDefault()
+        fetch(`http://localhost:8000/login`, {
+            method: "POST",
+            body: JSON.stringify({ email, password }),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(res => res.json())
+            .then(authInfo => {
+                if (authInfo.valid) {
+                    localStorage.setItem("${PROJECT_NAME}_token", JSON.stringify(authInfo))
+                    navigate("/")
+                } else {
+                    existDialog.current.showModal()
+                }
+            })
+    }
 
-    getUserByEmail(email).then((foundUsers) => {
-      if (foundUsers.length === 1) {
-        const user = foundUsers[0]
-        localStorage.setItem(
-          "${PROJECT_NAME}_user",
-          JSON.stringify({
-            id: user.id,
-          })
-        )
+    return (
+        <main className="container--login">
+            <dialog className="dialog dialog--auth" ref={existDialog}>
+                <div>User does not exist</div>
+                <button className="button--close" onClick={e => existDialog.current.close()}>Close</button>
+            </dialog>
 
-        navigate("/")
-      } else {
-        window.alert("Invalid login")
-      }
-    })
-  }
-
-  return (
-    <main className="container-login">
-      <section>
-        <form className="form-login" onSubmit={handleLogin}>
-          <h1>${PROJECT_NAME}</h1>
-          <h2>Please sign in</h2>
-          <fieldset>
-            <div className="form-group">
-              <input
-                type="email"
-                value={email}
-                onChange={(evt) => set(evt.target.value)}
-                className="form-control"
-                placeholder="Email address"
-                required
-                autoFocus
-              />
+            <section>
+                <form className="form--login" onSubmit={handleLogin}>
+                    <h1 className="text-4xl mt-7 mb-3">${PROJECT_NAME}</h1>
+                    <h2 className="text-xl mb-10">Please sign in</h2>
+                    <fieldset className="mb-4">
+                        <label htmlFor="inputEmail"> Email address </label>
+                        <input type="email" id="inputEmail"
+                            value={email}
+                            onChange={evt => setEmail(evt.target.value)}
+                            className="form-control"
+                            placeholder="Email address"
+                            required autoFocus />
+                    </fieldset>
+                    <fieldset className="mb-4">
+                        <label htmlFor="inputPassword"> Password </label>
+                        <input type="password" id="inputPassword"
+                            value={password}
+                            onChange={evt => setPassword(evt.target.value)}
+                            className="form-control"
+                            placeholder="Password"
+                        />
+                    </fieldset>
+                    <fieldset>
+                        <button type="submit" className="button p-3 rounded-md bg-blue-800 text-blue-100">
+                            Sign in
+                        </button>
+                    </fieldset>
+                </form>
+            </section>
+            <div className="loginLinks">
+                <section className="link--register">
+                    <Link className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600" to="/register">Not a member yet?</Link>
+                </section>
             </div>
-          </fieldset>
-          <fieldset>
-            <div className="form-group">
-              <button className="login-btn btn-info" type="submit">
-                Sign in
-              </button>
-            </div>
-          </fieldset>
-        </form>
-      </section>
-      <section>
-        <Link to="/register">Not a member yet?</Link>
-      </section>
-    </main>
-  )
+        </main>
+    )
 }
+
 EOL
 
 cat <<EOL > ./src/components/views/Authorized.jsx
-import { Navigate, useLocation } from "react-router-dom"
+import { Navigate, Outlet } from "react-router-dom"
+import { NavBar } from "./nav/Navbar.jsx"
 
-// We can access child components the same way we access props. Child components are passed to our props as a key/value pair where
-// children is the key.
-
-export const Authorized = ({ children }) => {
-  let location = useLocation()
-
-  // Check if user is logged in. If they are, render the CHILD components (in this case, the ApplicationViews component)
-  if (localStorage.getItem("${PROJECT_NAME}_user")) {
-    return children
+export const Authorized = () => {
+  if (localStorage.getItem("${PROJECT_NAME_token")) {
+    return <>
+      <NavBar />
+      <main className="p-4">
+        <Outlet />
+      </main>
+    </>
   }
-  // If the user is NOT logged in, redirect them to the login page using the Navigate component from react-router-dom
-  else {
-    return <Navigate to={`/login`} state={{ from: location }} replace />
-  }
+  return <Navigate to='/login' replace />
 }
 EOL
 
