@@ -16,13 +16,15 @@ curl -L -s 'https://raw.githubusercontent.com/vitejs/vite/main/.gitignore' > .gi
 mkdir ./src/components
 mkdir ./src/components/auth
 mkdir ./src/components/services
-mkdir ./src/components/views
+mkdir ./src/components/nav
 touch ./src/components/auth/Login.css
 touch ./src/components/auth/Register.jsx
 touch ./src/components/auth/Login.jsx
 touch ./src/components/services/userServices.jsx
-touch ./src/components/views/ApplicationViews.jsx
-touch ./src/components/views/Authorized.jsx
+touch ./src/components/ApplicationViews.jsx
+touch ./src/components/Authorized.jsx
+touch ./src/components/nav/Navbar.jsx
+touch ./src/components/nav/Navbar.css
 
 cat <<EOL > ./tailwind.config.js
 /** @type {import("tailwindcss").Config} */
@@ -48,7 +50,7 @@ cat <<EOL > ./src/components/services/userServices.jsx
 export const getCurrentUser = () => {
     return fetch('http://localhost:8000/current_user', {
         headers: {
-            Authorization: `Token ${JSON.parse(localStorage.getItem("${PROJECT_NAME}_token")).token}`,
+            Authorization: "Token ${JSON.parse(localStorage.getItem("${PROJECT_NAME}_token")).token}",
             "Content-Type": "application/json"
         }
     }).then(res => res.json())
@@ -157,7 +159,7 @@ export const Register = () => {
 }
 EOL
 
-cat <<EOL > .src/components/auth/Login.jsx
+cat <<EOL > ./src/components/auth/Login.jsx
 import { useRef, useState } from "react"
 import { Link, useNavigate } from "react-router-dom";
 import "./Login.css"
@@ -234,7 +236,7 @@ export const Login = () => {
 }
 EOL
 
-cat <<EOL > ./src/components/views/Authorized.jsx
+cat <<EOL > ./src/components/Authorized.jsx
 import { Navigate, Outlet } from "react-router-dom"
 import { NavBar } from "./nav/Navbar.jsx"
 
@@ -251,7 +253,7 @@ export const Authorized = () => {
 }
 EOL
 
-cat <<EOL > ./src/components/views/ApplicationViews.jsx
+cat <<EOL > ./src/components/ApplicationViews.jsx
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { Authorized } from "./Authorized"
 import { Login } from "./auth/Login.jsx"
@@ -299,6 +301,46 @@ function App() {
 }
 
 export default App
+EOL
+
+cat <<EOL > ./src/components/nav/Navbar.jsx
+import { NavLink, useNavigate } from "react-router-dom"
+import "./Navbar.css"
+
+export const NavBar = () => {
+    const navigate = useNavigate()
+    return (
+        <ul className="navbar pb-10">
+            {
+                (localStorage.getItem("${PROJECT_NAME}_token") !== null) ?
+                <>
+                    <li className="navbar__item">
+                        // <NavLink className="text-left underline text-blue-600 hover:text-purple-700" to={"/games/new"}>New Game!</NavLink>
+                    </li>
+                    <li className="navbar__item">
+                        // <NavLink className="text-left underline text-blue-600 hover:text-purple-700" to={"/games"}>Games</NavLink>
+                    </li>
+                    <li className="navbar__item">
+                        <button 
+                            onClick={() => {
+                                localStorage.removeItem("${PROJECT_NAME}_token")
+                                navigate('/login')
+                            }}
+                        >Logout</button>
+                    </li>
+                </> :
+                <>
+                    <li className="navbar__item">
+                        <NavLink  to={"/login"}>Login</NavLink>
+                    </li>
+                    <li className="navbar__item">
+                        <NavLink to={"/register"}>Register</NavLink>
+                    </li>
+                </>
+            }
+        </ul>
+    )
+}
 EOL
 
 git init
