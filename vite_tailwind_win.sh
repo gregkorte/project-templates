@@ -50,7 +50,7 @@ cat <<EOL > ./src/components/services/userServices.jsx
 export const getCurrentUser = () => {
     return fetch('http://localhost:8000/current_user', {
         headers: {
-            Authorization: "Token ${JSON.parse(localStorage.getItem("${PROJECT_NAME}_token")).token}",
+            Authorization: "Token ${JSON.parse(localStorage.getItem('${PROJECT_NAME}_token')).token}",
             "Content-Type": "application/json"
         }
     }).then(res => res.json())
