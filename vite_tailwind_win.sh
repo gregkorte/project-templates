@@ -24,7 +24,7 @@ mkdir ./src/components/views
 touch ./src/components/views/ApplicationViews.jsx
 touch ./src/components/views/Authorized.jsx
 
-echo '
+cat <<EOL > ./tailwind.config.js
 /** @type {import("tailwindcss").Config} */
 export default {
   content: [
@@ -36,7 +36,7 @@ export default {
   },
   plugins: [],
 }
-' > ./tailwind.config.js
+EOL
 
 echo '
 @tailwind base;
