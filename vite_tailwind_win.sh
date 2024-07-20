@@ -499,10 +499,10 @@ EOL
 
 git init
 git checkout -b main
-# git remote add origin ${REPO_NAME}
-# git add .
-# git commit -m "Initial commit"
-# git push -u origin main
+git remote add origin ${REPO_NAME}
+git add .
+git commit -m "Initial commit"
+git push -u origin main
 
 echo "**********************************"
 echo ""
