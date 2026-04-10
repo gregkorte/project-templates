@@ -25,7 +25,7 @@ cd ${PROJECT_NAME}client
 echo "📁 Working directory: $(pwd)"
 
 # npm create vite@latest . -- --template react
-npm create vite@latest . -- --template react  --skip-install \
+echo "no" | npm create vite@latest . -- --template react --skip-install \
   || { echo "❌ Vite project creation failed"; exit 1; }
 if [[ ! -f "./index.html" ]]; then
   echo "❌ Vite scaffold didn't produce expected files — check vite output above" >&2
