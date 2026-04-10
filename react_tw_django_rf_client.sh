@@ -636,10 +636,16 @@ git commit -m "Initial commit"
 git push -u origin main \
   || { echo "❌ git push failed — check your SSH key and remote URL"; exit 1; }
 
+BOLD='\033[1m'
+CYAN='\033[0;36m'
+RESET='\033[0m'
+
 echo "**********************************"
 echo ""
 echo "Double check your files and Github repository to make sure everything installed correctly."
-echo "Run _npm run dev_ in your project root (${PROJECT_NAME}client) to run your project."
+echo ""
+echo -e "Run ${BOLD}${CYAN}npm run dev${RESET} in your project root (${PROJECT_NAME}client) to run your project."
+echo ""
 echo "If your API server is running you should be able to log in to the application."
 echo ""
 echo "**********************************"
