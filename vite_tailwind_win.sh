@@ -174,6 +174,72 @@ button:focus-visible {
 } 
 EOL
 
+cat <<EOL > ./src/compoenents/auth/Login.css
+.container--login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.form--login {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.form--login fieldset {
+  border: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form--login label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #444;
+}
+
+.form--login input {
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form--login input:focus {
+  border-color: #646cff;
+}
+
+.dialog--auth {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.button--close {
+  margin-top: 1rem;
+}
+
+.loginLinks {
+  margin-top: 1rem;
+  text-align: center;
+}
+EOL
+
 cat <<EOL > ./src/components/nav/Navbar.css
 .navbar {
     display: flex;
@@ -450,7 +516,7 @@ EOL
 
 cat <<EOL > ./src/components/ApplicationViews.jsx
 import { BrowserRouter, Route, Routes } from "react-router-dom"
-import { Authorized } from "./Authorized"
+import { Authorized } from "./Authorized.jsx"
 import { Login } from "./auth/Login.jsx"
 import { Register } from './auth/Register.jsx'
 import App from "../App.jsx"
@@ -475,7 +541,7 @@ EOL
 cat <<EOL > ./src/App.jsx
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
-import viteLogo from '/assets/vite.svg'
+import viteLogo from './assets/vite.svg'
 import './App.css'
 
 function App() {
