@@ -20,8 +20,9 @@ if [[ -z "$REPO_NAME" ]]; then
 fi
 
 # mkdir ${PROJECT_NAME}client && cd $_
-mkdir "${PROJECT_NAME}client" || { echo "❌ Failed to create directory '${PROJECT_NAME}client'"; exit 1; }
-cd "$PROJECT_NAME}client"
+DIR_NAME ="${PROJECT_NAME}client"
+mkdir "$DIR_NAME" || { echo "❌ Failed to create directory '$DIR_NAME'"; exit 1; }
+cd "$DIR_NAME"
 echo "📁 Working directory: $(pwd)"
 
 # npm create vite@latest . -- --template react
