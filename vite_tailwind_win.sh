@@ -58,14 +58,14 @@ fi
 # mkdir ./src/components/auth
 # mkdir ./src/components/services
 # mkdir ./src/components/nav
-# touch ./src/components/auth/Login.css
 # touch ./src/components/auth/Register.jsx
 # touch ./src/components/auth/Login.jsx
 # touch ./src/components/services/userServices.jsx
 # touch ./src/components/ApplicationViews.jsx
 # touch ./src/components/Authorized.jsx
 # touch ./src/components/nav/Navbar.jsx
-# touch ./src/components/nav/Navbar.css
+touch ./src/components/auth/Login.css
+touch ./src/components/nav/Navbar.css
 mkdir -p ./src/components/auth \
          ./src/components/services \
          ./src/components/nav \
