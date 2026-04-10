@@ -1,49 +1,104 @@
 #!/bin/bash
+set -euo pipefall
+
+trap 'echo "❌ Script failed at line $LINENO. Exiting." >&2' ERR
 
 echo "Enter your project name (no spaces):"
 read -p "> " PROJECT_NAME
 
-mkdir ${PROJECT_NAME}client && cd $_
+if [[ -z "$PROJECT_NAME" ]]; then
+  echo "❌ Project name cannot be empty." >&2
+  exit 1
+fi
 
 echo "Enter the SSH address for your Github repository:"
 read -p "> " REPO_NAME
 
-npm create vite@latest . -- --template react
-npm install -D tailwindcss postcss autoprefixer react-router-dom
-npx tailwindcss init -p
-curl -L -s 'https://raw.githubusercontent.com/vitejs/vite/main/.gitignore' > .gitignore
+if [[ -z "$REPO_NAME" ]]; then
+  echo "❌ Repo name cannot be empty." >&2
+  exit 1
+fi
 
-mkdir ./src/components
-mkdir ./src/components/auth
-mkdir ./src/components/services
-mkdir ./src/components/nav
-touch ./src/components/auth/Login.css
-touch ./src/components/auth/Register.jsx
-touch ./src/components/auth/Login.jsx
-touch ./src/components/services/userServices.jsx
-touch ./src/components/ApplicationViews.jsx
-touch ./src/components/Authorized.jsx
-touch ./src/components/nav/Navbar.jsx
-touch ./src/components/nav/Navbar.css
+# mkdir ${PROJECT_NAME}client && cd $_
+mkdir "${PROJECT_NAME}client" || { echo "❌ Failed to create directory '${PROJECT_NAME}client'"; exit 1; }
+cd "$PROJECT_NAME}client"
+echo "📁 Working directory: $(pwd)"
 
-cat <<EOL > ./tailwind.config.js
-/** @type {import("tailwindcss").Config} */
-export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+# npm create vite@latest . -- --template react
+npm create vite@latest . -- --template react --yes \
+  || { echo "❌ Vite project creation failed"; exit 1; }
+echo "✅ Vite project created"
+
+#npm install -D tailwindcss postcss autoprefixer react-router-dom
+# npm install -D tailwindcss postcss autoprefixer react-router-dom \
+#   || { echo "❌ npm install failed"; exit 1; }
+# echo "✅ Dependencies installed"
+npm install -D tailwindcss @tailwindcss/vite react-router-dom \
+  || { echo "❌ npm install failed"; exit 1; }
+
+#npx tailwindcss init -p
+# npx tailwindcss init -p \
+#   || { echo "❌ Tailwind init failed"; exit 1; }
+  
+#curl -L -s 'https://raw.githubusercontent.com/vitejs/vite/main/.gitignore' > .gitignore
+curl -L -s 'https://raw.githubusercontent.com/vitejs/vite/main/.gitignore' > .gitignore \
+  || { echo "❌ Failed to download .gitignore"; exit 1; }
+
+if [[ ! -d "./src" ]]; then
+  echo "❌ ./src directory not found — Vite scaffold likely failed silently" >&2
+  exit 1
+fi
+
+# mkdir ./src/components
+# mkdir ./src/components/auth
+# mkdir ./src/components/services
+# mkdir ./src/components/nav
+# touch ./src/components/auth/Login.css
+# touch ./src/components/auth/Register.jsx
+# touch ./src/components/auth/Login.jsx
+# touch ./src/components/services/userServices.jsx
+# touch ./src/components/ApplicationViews.jsx
+# touch ./src/components/Authorized.jsx
+# touch ./src/components/nav/Navbar.jsx
+# touch ./src/components/nav/Navbar.css
+mkdir -p ./src/components/auth \
+         ./src/components/services \
+         ./src/components/nav \
+  || { echo "❌ Failed to create component directories"; exit 1; }
+echo "✅ Directories created"
+
+cat <<EOL > ./vite.config.js
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
+
+export default defineConfig({
+  plugins: [
+    react(),
+    tailwindcss(),
   ],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-}
+})
 EOL
 
+# cat <<EOL > ./tailwind.config.js
+# /** @type {import("tailwindcss").Config} */
+# export default {
+#   content: [
+#     "./index.html",
+#     "./src/**/*.{js,ts,jsx,tsx}",
+#   ],
+#   theme: {
+#     extend: {},
+#   },
+#   plugins: [],
+# }
+# EOL
+
 cat <<EOL > ./src/index.css
-/* @tailwind base;
-@tailwind components;
-@tailwind utilities; */
+# /* @tailwind base;
+# @tailwind components;
+# @tailwind utilities; */
+/* @import "tailwindcss"; */
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -334,7 +389,7 @@ export const Login = () => {
 
             <section>
                 <form className="form--login" onSubmit={handleLogin}>
-                    <h1 className="text-4xl mt-7 mb-3">bandaide</h1>
+                    <h1 className="text-4xl mt-7 mb-3">"${PROJECT_NAME}"</h1>
                     <h2 className="text-xl mb-10">Please sign in</h2>
                     <fieldset className="mb-4">
                         <label htmlFor="inputEmail"> Email address </label>
@@ -499,10 +554,16 @@ EOL
 
 git init
 git checkout -b main
-git remote add origin ${REPO_NAME}
+# git remote add origin ${REPO_NAME}
+# git add .
+# git commit -m "Initial commit"
+# git push -u origin main
+git remote add origin "${REPO_NAME}" \
+  || { echo "❌ Failed to add git remote — check your SSH URL"; exit 1; }
 git add .
 git commit -m "Initial commit"
-git push -u origin main
+git push -u origin main \
+  || { echo "❌ git push failed — check your SSH key and remote URL"; exit 1; }
 
 echo "**********************************"
 echo ""
