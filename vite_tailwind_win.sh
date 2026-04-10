@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefall
+set -euo pipefail
 
 trap 'echo "❌ Script failed at line $LINENO. Exiting." >&2' ERR
 
