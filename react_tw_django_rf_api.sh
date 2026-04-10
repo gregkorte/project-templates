@@ -641,5 +641,8 @@ git push -u origin main
 echo "**********************************"
 echo ""
 echo "Open your Pipfile in the project and make sure that the right version of Python is specified at the bottom"
+echo "Run `pipenv shell` to start your environment"
+echo "Run `python manage.py runserver 8000` to run your API server"
+echo "If your client is running you should be able to log in to the application"
 echo ""
 echo "**********************************"
