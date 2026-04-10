@@ -25,22 +25,21 @@ cd ${PROJECT_NAME}client
 echo "📁 Working directory: $(pwd)"
 
 # npm create vite@latest . -- --template react
-npm create vite@latest . -- --template react \
+npm create vite@latest . -- --template react  --skip-install \
   || { echo "❌ Vite project creation failed"; exit 1; }
 if [[ ! -f "./index.html" ]]; then
   echo "❌ Vite scaffold didn't produce expected files — check vite output above" >&2
   exit 1
 fi
 echo "✅ Vite scaffold verified"
-
 echo "✅ Vite project created"
 
 #npm install -D tailwindcss postcss autoprefixer react-router-dom
 # npm install -D tailwindcss postcss autoprefixer react-router-dom \
 #   || { echo "❌ npm install failed"; exit 1; }
-# echo "✅ Dependencies installed"
 npm install -D tailwindcss @tailwindcss/vite react-router-dom \
   || { echo "❌ npm install failed"; exit 1; }
+echo "✅ Dependencies installed"
 
 #npx tailwindcss init -p
 # npx tailwindcss init -p \
